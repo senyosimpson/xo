@@ -14,6 +14,6 @@ defmodule Xo.Post do
   def changeset(post, attrs) do
     post
     |> cast(attrs, [:text, :tags])
-    |> validate_required([:text, :tags])
+    # |> validate_required([:text, :tags])
   end
 end
