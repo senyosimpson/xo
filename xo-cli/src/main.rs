@@ -1,6 +1,6 @@
-use std::collections::HashMap;
-
 use clap::{Parser, Subcommand};
+use serde::Serialize;
+use url::Url;
 
 #[derive(Parser, Debug)]
 struct Cli {
@@ -13,17 +13,30 @@ enum Cmd {
     Log { message: String },
 }
 
+#[derive(Serialize)]
+struct Body<'a> {
+    message: &'a String,
+    user_id: u64,
+}
+
 fn main() {
     let cli = Cli::parse();
     match &cli.command {
         Cmd::Log { message } => {
             let client = reqwest::blocking::Client::new();
 
-            let mut body = HashMap::with_capacity(2);
-            body.insert("message", message);
+            let url: Url = std::env::var("XO_API_URL")
+                .expect("XO_API_URL not set")
+                .parse()
+                .unwrap();
 
-            let url = std::env::var("XO_API_URL").expect("XO_API_URL not set");
+            let url = url.join("posts").unwrap();
+            println!("URL: {url:#?}");
 
+            let body = Body {
+                message,
+                user_id: 2,
+            };
             let _ = client.post(url).json(&body).send();
             println!("message logged")
         }
