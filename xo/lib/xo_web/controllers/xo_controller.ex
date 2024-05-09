@@ -7,7 +7,7 @@ defmodule XoWeb.XoController do
       conn,
       :home,
       page_title: "Xo • Home",
-      posts: Xo.Repo.all(from p in Xo.Post, where: p.user_id == 2, select: p.text)
+      posts: Xo.Repo.all(from p in Xo.Post, where: p.user_id == 2, select: p.text, order_by: [desc: p.updated_at])
     )
   end
 end
