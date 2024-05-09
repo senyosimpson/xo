@@ -20,10 +20,13 @@ defmodule XoWeb.Router do
     get "/", XoController, :home
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", XoWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", XoWeb do
+    pipe_through :api
+
+    post "/posts", PostController, :post
+
+    # post "/users", UserController, :post
+  end
 
   # Enable LiveDashboard in development
   if Application.compile_env(:xo, :dev_routes) do
