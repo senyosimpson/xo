@@ -2,30 +2,28 @@ defmodule XoWeb.Router do
   use XoWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, html: {XoWeb.Layouts, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_live_flash)
+    plug(:put_root_layout, html: {XoWeb.Layouts, :root})
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   scope "/", XoWeb do
-    pipe_through :browser
+    pipe_through(:browser)
 
-    get "/", XoController, :home
+    live("/", TimelineLive, :home)
   end
 
   scope "/api", XoWeb do
-    pipe_through :api
+    pipe_through(:api)
 
-    post "/posts", PostController, :post
-
-    # post "/users", UserController, :post
+    post("/posts", PostController, :post)
   end
 
   # Enable LiveDashboard in development
@@ -38,9 +36,9 @@ defmodule XoWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      live_dashboard "/dashboard", metrics: XoWeb.Telemetry
+      live_dashboard("/dashboard", metrics: XoWeb.Telemetry)
     end
   end
 end
